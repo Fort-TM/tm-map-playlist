@@ -162,7 +162,7 @@ class Map {
         if (this.Uid != "" && other.Uid != "") {
             return this.Uid == other.Uid;
         }
-        
+
         if (this.Url != "" && other.Url != "") {
             return this.Url == other.Url;
         }
@@ -195,7 +195,7 @@ class Map {
         if (this.MapType == "TM_Stunt") {
             return GameMode::Stunt;
         }
-        
+
         if (this.MapType == "TM_Platform") {
             return GameMode::Platform;
         }

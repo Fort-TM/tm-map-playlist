@@ -37,12 +37,12 @@ void Main() {
     }
 }
 
-void OnDisabled() { 
+void OnDisabled() {
     Cache::StoreMapIds();
-    Saves::UpdateFile(); 
+    Saves::UpdateFile();
 }
 
-void OnDestroyed() { 
+void OnDestroyed() {
     Cache::StoreMapIds();
     Saves::UpdateFile();
 }
@@ -65,6 +65,16 @@ void RenderMenu() {
 
         if (UI::MenuItem(Icons::ClockO + " Display timer", "", g_showTimer)) {
             g_showTimer = !g_showTimer;
+        }
+
+        if (UI::BeginMenu(Icons::Plus + " Add current map to...", CurrentMap::CanAddCurrentChallenge())) {
+            if (UI::MenuItem("Current playlist")) {
+                startnew(CurrentMap::AddCurrentMapToCurrentPlaylist);
+            }
+            if (UI::MenuItem("Saved playlists")) {
+                Renderables::Add(AddToPlaylist());
+            }
+            UI::EndMenu();
         }
 
         UI::EndMenu();
@@ -106,6 +116,18 @@ UI::InputBlocking OnKeyPress(bool down, VirtualKey key) {
 
     if (key == S_SwitchKey && !playlist.IsEmpty() && !TM::IsLoadingMap()) {
         playlist.NextMap();
+        return UI::InputBlocking::Block;
+    }
+
+    if (key == S_AddCurrentMapKey) {
+        startnew(CurrentMap::AddCurrentMapToCurrentPlaylist);
+        return UI::InputBlocking::Block;
+    }
+
+    if (key == S_AddCurrentMapModalKey) {
+        if ((!S_HideWithOP || UI::IsOverlayShown()) && (!S_HideWithGameUI || UI::IsGameUIVisible())) {
+            Renderables::Add(AddToPlaylist());
+        }
         return UI::InputBlocking::Block;
     }
 
@@ -176,7 +198,7 @@ void PbLoop() {
             sleep(1000);
             continue;
         }
-        
+
         if (app.Network is null || app.Network.ClientManiaAppPlayground is null) {
             sleep(500);
             continue;

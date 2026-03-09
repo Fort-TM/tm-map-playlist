@@ -3,7 +3,9 @@ namespace _Hotkeys {
         None,
         Switch,
         MainWindow,
-        Timer
+        Timer,
+        AddCurrentMap,
+        AddCurrentMapModal,
     }
 
     HotkeySetting g_detectingSetting = HotkeySetting::None;
@@ -24,6 +26,12 @@ namespace _Hotkeys {
 
     bool get_ListeningForTimerKey() { return g_detectingSetting == HotkeySetting::Timer; }
     void set_ListeningForTimerKey(bool detect) { g_detectingSetting = detect ? HotkeySetting::Timer : HotkeySetting::None; }
+
+    bool get_ListeningForAddCurrentMapKey() { return g_detectingSetting == HotkeySetting::AddCurrentMap; }
+    void set_ListeningForAddCurrentMapKey(bool detect) { g_detectingSetting = detect ? HotkeySetting::AddCurrentMap : HotkeySetting::None; }
+
+    bool get_ListeningForAddCurrentMapModalKey() { return g_detectingSetting == HotkeySetting::AddCurrentMapModal; }
+    void set_ListeningForAddCurrentMapModalKey(bool detect) { g_detectingSetting = detect ? HotkeySetting::AddCurrentMapModal : HotkeySetting::None; }
 
     string GetKeyName(VirtualKey key) {
         if (key == VirtualKey(0)) {
@@ -47,7 +55,9 @@ namespace _Hotkeys {
         array<VirtualKey> usedKeys = {
             S_SwitchKey,
             S_WindowKey,
-            S_TimerKey
+            S_TimerKey,
+            S_AddCurrentMapKey,
+            S_AddCurrentMapModalKey
         };
 
         return usedKeys.Find(key) > -1;
@@ -66,6 +76,10 @@ namespace _Hotkeys {
             S_WindowKey = VirtualKey(0);
         } else if (S_TimerKey == key) {
             S_TimerKey = VirtualKey(0);
+        } else if (S_AddCurrentMapKey == key) {
+            S_AddCurrentMapKey = VirtualKey(0);
+        } else if (S_AddCurrentMapModalKey == key) {
+            S_AddCurrentMapModalKey = VirtualKey(0);
         }
     }
 
@@ -87,6 +101,12 @@ namespace _Hotkeys {
                 break;
             case HotkeySetting::Timer:
                 S_TimerKey = key;
+                break;
+            case HotkeySetting::AddCurrentMap:
+                S_AddCurrentMapKey = key;
+                break;
+            case HotkeySetting::AddCurrentMapModal:
+                S_AddCurrentMapModalKey = key;
                 break;
             default:
                 break;

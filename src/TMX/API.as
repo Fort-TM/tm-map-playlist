@@ -15,7 +15,7 @@ namespace TMX {
                 _Logging::Error("[GetMap] Something went wrong while fetching map with ID #" + mapId, true);
                 return null;
             }
-            
+
             if (json["Results"].Length == 0) {
                 _Logging::Error("[GetMap] Failed to find a map with ID #" + mapId + ". Map might be private or deleted.", true);
                 return null;
@@ -24,6 +24,33 @@ namespace TMX {
             return TMX::MapInfo(json["Results"][0]);
         } catch {
             _Logging::Error("[GetMap] An error occurred while fetching map with ID #" + mapId + " from TMX: " + getExceptionInfo(), true);
+            return null;
+        }
+    }
+
+    TMX::MapInfo@ GetMapFromUid(const string &in mapUid) {
+        string reqUrl = "https://trackmania.exchange/api/maps?count=1000&fields=" + MAP_FIELDS + "&uid=" + mapUid;
+
+        _Logging::Trace("[GetMapFromUid] Fetching TMX map with UID " + mapUid);
+
+        try {
+            Json::Value json = API::GetAsync(reqUrl);
+
+            _Logging::Debug("[GetMapFromUid] JSON:" + Json::Write(json));
+
+            if (json.GetType() == Json::Type::Null || !json.HasKey("Results")) {
+                _Logging::Error("[GetMapFromUid] Something went wrong while fetching map with UID " + mapUid, true);
+                return null;
+            }
+
+            if (json["Results"].Length == 0) {
+                _Logging::Error("[GetMapFromUid] Failed to find a map with UID " + mapUid + ". Map might be private or deleted.", true);
+                return null;
+            }
+
+            return TMX::MapInfo(json["Results"][0]);
+        } catch {
+            _Logging::Error("[GetMapFromUid] An error occurred while fetching map with UID " + mapUid + " from TMX: " + getExceptionInfo(), true);
             return null;
         }
     }
@@ -42,7 +69,7 @@ namespace TMX {
                 _Logging::Error("[GetMappack] Something went wrong while fetching mappack with ID #" + mappackId);
                 return null;
             }
-            
+
             if (json["Results"].Length == 0) {
                 _Logging::Error("[GetMappack] Failed to find a mappack with ID #" + mappackId + ". Mappack might not exist.", true);
                 return null;
@@ -79,7 +106,7 @@ namespace TMX {
                 if (json.GetType() == Json::Type::Null || !json.HasKey("Results")) {
                     _Logging::Error("[GetMappackMaps] Something went wrong while fetching maps from mappack ID #" + mappackId, true);
                     return maps;
-                } 
+                }
 
                 if (json["Results"].Length == 0) {
                     if (maps.IsEmpty()) {
@@ -126,7 +153,7 @@ namespace TMX {
                 _Logging::Error("[GetTags] Something went wrong while fetching the tags from TMX", true);
                 return;
             }
-            
+
             for (uint i = 0; i < json.Length; i++) {
                 TMX::Tag@ tag = TMX::Tag(json[i]);
                 AllTags.InsertLast(tag);
