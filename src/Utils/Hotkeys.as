@@ -5,7 +5,7 @@ namespace _Hotkeys {
         MainWindow,
         Timer,
         AddCurrentMap,
-        AddCurrentMapModal,
+        AddCurrentMapModal
     }
 
     HotkeySetting g_detectingSetting = HotkeySetting::None;
@@ -115,10 +115,12 @@ namespace _Hotkeys {
         StopListeningForKey();
     }
 
-    void RenderHotkeyCombo(const string &in label, VirtualKey currentKey) {
+    void RenderHotkeyCombo(const string &in label, VirtualKey currentKey, HotkeySetting settingKey) {
         UI::SetNextItemWidth(175);
 
         if (UI::BeginCombo(label, GetKeyName(currentKey))) {
+            g_detectingSetting = settingKey;
+
             for (int i = 0; i <= 254; i++) {
                 VirtualKey key = VirtualKey(i);
                 string keyName = GetKeyName(key);
@@ -141,6 +143,7 @@ namespace _Hotkeys {
                 UI::EndDisabled();
             }
 
+            StopListeningForKey();
             UI::EndCombo();
         }
     }

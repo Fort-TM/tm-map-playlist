@@ -307,7 +307,7 @@ void RenderHotkeySettings() {
         S_AddCurrentMapModalKey = VirtualKey(0);
     }
 
-    _Hotkeys::RenderHotkeyCombo("Switch map", S_SwitchKey);
+    _Hotkeys::RenderHotkeyCombo("Switch map", S_SwitchKey, _Hotkeys::HotkeySetting::Switch);
     UI::SettingDescription("Hotkey to switch to the next map in the playlist.");
 
     UI::SameLine();
@@ -318,7 +318,7 @@ void RenderHotkeySettings() {
         _Hotkeys::ListeningForSwitchKey = true;
     }
 
-    _Hotkeys::RenderHotkeyCombo("Show/Hide main window", S_WindowKey);
+    _Hotkeys::RenderHotkeyCombo("Show/Hide main window", S_WindowKey, _Hotkeys::HotkeySetting::MainWindow);
 
     UI::SameLine();
 
@@ -328,7 +328,7 @@ void RenderHotkeySettings() {
         _Hotkeys::ListeningForWindowKey = true;
     }
 
-    _Hotkeys::RenderHotkeyCombo("Show/Hide timer", S_TimerKey);
+    _Hotkeys::RenderHotkeyCombo("Show/Hide timer", S_TimerKey, _Hotkeys::HotkeySetting::Timer);
 
     UI::SameLine();
 
@@ -338,7 +338,7 @@ void RenderHotkeySettings() {
         _Hotkeys::ListeningForTimerKey = true;
     }
 
-    _Hotkeys::RenderHotkeyCombo("Add current map", S_AddCurrentMapKey);
+    _Hotkeys::RenderHotkeyCombo("Add current map", S_AddCurrentMapKey, _Hotkeys::HotkeySetting::AddCurrentMap);
 
     UI::SameLine();
 
@@ -348,7 +348,7 @@ void RenderHotkeySettings() {
         _Hotkeys::ListeningForAddCurrentMapKey = true;
     }
 
-    _Hotkeys::RenderHotkeyCombo("Add current map to selected playlists", S_AddCurrentMapModalKey);
+    _Hotkeys::RenderHotkeyCombo("Add current map to selected playlists", S_AddCurrentMapModalKey, _Hotkeys::HotkeySetting::AddCurrentMapModal);
 
     UI::SameLine();
 
