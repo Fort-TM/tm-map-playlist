@@ -13,6 +13,10 @@ class PlaylistsManager {
         return this.Playlists.Length;
     }
 
+    bool IsEmpty() {
+        return this.Playlists.IsEmpty();
+    }
+
     void Add(MapPlaylist@ list) {
         this.Playlists.InsertLast(list);
         this.OnUpdatedPlaylists();

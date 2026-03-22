@@ -313,11 +313,12 @@ namespace UI {
         UI::PushStyleColor(UI::Col::TableRowBgAlt, vec4(0.1f, 0.1f, 0.1f, .7));
         UI::PushStyleColor(UI::Col::TableRowBg, vec4(0.13f, 0.13f, 0.13f, .7));
         UI::PushStyleColor(UI::Col::TableBorderLight, vec4(.25, .25, .25, 1));
+        UI::PushStyleColor(UI::Col::HeaderHovered, vec4(0.3f, 0.3f, 0.3f, 0.8f));
         UI::PushStyleVar(UI::StyleVar::CellPadding, UI::GetStyleVarVec2(UI::StyleVar::CellPadding) + vec2(6, 1));
     }
 
     void PopTableVars() {
         UI::PopStyleVar();
-        UI::PopStyleColor(3);
+        UI::PopStyleColor(4);
     }
 }

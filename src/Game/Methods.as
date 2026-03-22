@@ -57,8 +57,13 @@ namespace TM {
     }
 
     bool InMap() {
-        CTrackMania@ app = cast<CTrackMania>(GetApp());
-        return app.RootMap !is null;
+        CGameCtnChallenge@ map = GetLoadedMap();
+        return map !is null;
+    }
+
+    CGameCtnChallenge@ GetLoadedMap() {
+        auto app = GetApp();
+        return app.RootMap;
     }
 
     bool InEditor() {
@@ -71,13 +76,13 @@ namespace TM {
             return false;
         }
 
-        CTrackMania@ app = cast<CTrackMania>(GetApp());
+        CGameCtnChallenge@ map = GetLoadedMap();
 
-        if (app.RootMap is null || app.RootMap.IdName == "") {
+        if (map is null || map.IdName == "") {
             return false;
         }
 
-        return app.RootMap.IdName.ToLower() == playlist.currentMap.Uid.ToLower();
+        return map.IdName.ToLower() == playlist.currentMap.Uid.ToLower();
     }
 
     void ClosePauseMenu() {

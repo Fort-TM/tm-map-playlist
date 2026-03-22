@@ -1,85 +1,102 @@
 namespace CurrentMap {
-    /*
-     * Add the currently loaded challenge to the current playlist if it can be added.
-     * Shows a notification on success or if the map is a duplicate.
-     */
-    void AddCurrentMapToCurrentPlaylist() {
-        auto challenge = GetAddableCurrentChallenge();
-        if (challenge is null) {
+    void AddToCurrentPlaylist() {
+        CGameCtnChallenge@ map = GetMap();
+
+        if (map is null) {
+            _Logging::Warn("Failed to get the current map!");
             return;
         }
 
-        auto playlistNameSentence = (playlist.Name == "" ? "the current playlist" : "playlist \"" + playlist.Name + "\"");
+        auto playlistName = playlist.Name == "" ? "the current playlist" : "playlist \"" + playlist.Name + "\"";
 
-        foreach (auto map : playlist.Maps) {
-            if (map.Uid == challenge.MapInfo.MapUid) {
-                UI::ShowNotification("Duplicate Map", Text::StripFormatCodes(challenge.MapInfo.Name) + " is already present in " + playlistNameSentence + ".", _Logging::WARN_COLOR);
+        foreach (auto listMap : playlist.Maps) {
+            if (listMap.Uid == map.IdName) {
+                _Logging::Warn("Current map already exists in " + playlistName + ".", true);
                 return;
             }
         }
 
-        auto map = FetchMapForChallenge(challenge);
-        playlist.AddMap(map);
+        Map@ mapInfo = FetchMapInfo(map);
 
-        UI::ShowNotification("Map Added", Text::StripOpenplanetFormatCodes(map.GbxName) + " has been added to " + playlistNameSentence + ".");
+        if (mapInfo is null) {
+            _Logging::Warn("Failed to fetch the information for the current map!");
+            return;
+        }
+
+        playlist.AddMap(mapInfo);
+
+        UI::ShowNotification("Current map added", mapInfo.Name + " has been added to " + playlistName + ".");
     }
 
-    /*
-     * Add the currently loaded challenge to a set of playlists if it can be added.
-     * Shows a notification upon completion. Playlists that already have the map will be silently ignored.
-     */
-    void AddCurrentMapToPlaylists(MapPlaylist@[] playlists) {
-        auto challenge = GetAddableCurrentChallenge();
-        auto map = FetchMapForChallenge(challenge);
+    void AddToPlaylists(array<MapPlaylist@> playlists) {
+        CGameCtnChallenge@ map = GetMap();
+
         if (map is null) {
+            _Logging::Warn("Failed to get the current map!");
+            return;
+        }
+
+        Map@ mapInfo = FetchMapInfo(map);
+
+        if (mapInfo is null) {
+            _Logging::Warn("Failed to fetch the information for the current map!");
             return;
         }
 
         foreach (auto playlist : playlists) {
-            playlist.AddMap(map);
+            playlist.AddMap(mapInfo);
         }
 
-        UI::ShowNotification("Map Added", Text::StripOpenplanetFormatCodes(map.GbxName) + " has been added to " + tostring(playlists.Length) + " " + Pluralize("playlist", playlists.Length) + ".");
+        UI::ShowNotification("Current map added", mapInfo.Name + " has been added to " + tostring(playlists.Length) + " " + Pluralize("playlist", playlists.Length) + ".");
 
         Saves::UpdateFile();
     }
 
-    // Returns true if a map is currently loaded and it can be added to a playlist; otherwise false.
-    bool CanAddCurrentChallenge() {
-        return GetAddableCurrentChallenge() !is null;
+    bool get_CanBeAdded() {
+        CGameCtnChallenge@ map = GetMap();
+        return map !is null;
     }
 
-    // Gets the currently loaded challenge if it is addable to a playlist; otherwise returns null.
-    CGameCtnChallenge@ GetAddableCurrentChallenge() {
-        auto challenge = cast<CTrackMania>(GetApp()).RootMap;
-        if (TM::InEditor() || challenge is null || challenge.MapInfo is null) {
+    CGameCtnChallenge@ GetMap() {
+        if (TM::InEditor()) {
             return null;
         }
-        return challenge;
-    }
-
-    // Fetches a map from a challenge. First attempts to load it by UID from TMX, then from NadeoServices, then from disk.
-    Map@ FetchMapForChallenge(CGameCtnChallenge@ challenge) {
-        if (challenge is null) {
-            _Logging::Warn("[FetchCurrentChallengeMap] Current challenge is not addable as a map");
+        
+        CGameCtnChallenge@ map = TM::GetLoadedMap();
+        
+        if (map is null || map.MapInfo is null) {
             return null;
         }
-
-        Map@ map;
-
-        _Logging::Trace("[FetchCurrentChallengeMap] Performing TMX map UID lookup for " + challenge.MapInfo.MapUid);
-        @map = TMX::GetMapFromUid(challenge.MapInfo.MapUid);
-        if (map is null) {
-            _Logging::Trace("[FetchCurrentChallengeMap] TMX lookup unsuccessful for " + challenge.MapInfo.MapUid + "; trying NadeoServices");
-            @map = TM::GetMapFromUid(challenge.MapInfo.MapUid);
-        }
-        if (map is null) {
-            _Logging::Trace("[FetchCurrentChallengeMap] NadeoServices lookup unsuccessful for " + challenge.MapInfo.MapUid + "; trying local file");
-            @map = Map(challenge, challenge.MapInfo.FileName);
-        }
-        // Map is guaranteed non-null if we used Map ctor
 
         return map;
+    }
+
+    // Fetches the map information from TMX, Nadeo Services, or from the CGameCtnChallenge instance.
+    Map@ FetchMapInfo(CGameCtnChallenge@ map) {
+        if (map is null) {
+            _Logging::Warn("[FetchMapInfo] Current map can't be added or is null!");
+            return null;
+        }
+
+        Map@ mapData;
+
+        _Logging::Trace("[FetchMapInfo] Fetching current map on TMX. UID: " + map.IdName);
+
+        TMX::MapInfo@ tmxInfo = TMX::GetMapFromUid(map.IdName);
+
+        if (tmxInfo is null) {
+            _Logging::Trace("[FetchMapInfo] Failed to get current map on TMX, searching on Nadeo API...");
+            @mapData = TM::GetMapFromUid(map.IdName);
+        } else {
+            @mapData = Map(tmxInfo);
+        }
+
+        if (mapData is null) {
+            _Logging::Trace("[FetchMapInfo] Failed to find map on Nadeo's servers, loading CGameCtnChallenge data.");
+            @mapData = Map(map, map.MapInfo.FileName);
+        }
+
+        return mapData;
     }
 
 }

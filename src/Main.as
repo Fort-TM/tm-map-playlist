@@ -67,13 +67,19 @@ void RenderMenu() {
             g_showTimer = !g_showTimer;
         }
 
-        if (UI::BeginMenu(Icons::Plus + " Add current map to...", CurrentMap::CanAddCurrentChallenge())) {
+        if (UI::BeginMenu(Icons::Plus + " Add current map to...", CurrentMap::CanBeAdded)) {
             if (UI::MenuItem("Current playlist")) {
-                startnew(CurrentMap::AddCurrentMapToCurrentPlaylist);
+                startnew(CurrentMap::AddToCurrentPlaylist);
             }
-            if (UI::MenuItem("Saved playlists")) {
+
+            if (UI::MenuItem("Saved playlists", "", false, !savedPlaylists.IsEmpty())) {
                 Renderables::Add(AddToPlaylist());
             }
+
+            if (savedPlaylists.IsEmpty()) {
+                UI::SetItemTooltip("You don't have any saved playlists!");
+            }
+
             UI::EndMenu();
         }
 
@@ -119,13 +125,13 @@ UI::InputBlocking OnKeyPress(bool down, VirtualKey key) {
         return UI::InputBlocking::Block;
     }
 
-    if (key == S_AddCurrentMapKey) {
-        startnew(CurrentMap::AddCurrentMapToCurrentPlaylist);
+    if (key == S_AddCurrentMapKey && CurrentMap::CanBeAdded) {
+        startnew(CurrentMap::AddToCurrentPlaylist);
         return UI::InputBlocking::Block;
     }
 
-    if (key == S_AddCurrentMapModalKey) {
-        if ((!S_HideWithOP || UI::IsOverlayShown()) && (!S_HideWithGameUI || UI::IsGameUIVisible())) {
+    if (key == S_AddCurrentMapModalKey && CurrentMap::CanBeAdded) {
+        if ((!S_HideWithOP || UI::IsOverlayShown()) && (!S_HideWithGameUI || UI::IsGameUIVisible()) && !savedPlaylists.IsEmpty()) {
             Renderables::Add(AddToPlaylist());
         }
         return UI::InputBlocking::Block;
