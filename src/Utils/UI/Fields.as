@@ -41,6 +41,9 @@ namespace UI {
             case Source::Favorites:
                 RenderFavoritesButtons();
                 break;
+            case Source::Current_Map:
+                RenderCurrentMapButtons();
+                break;
             default:
                 RenderField();
                 break;
@@ -212,15 +215,13 @@ namespace UI {
     }
 
     void RenderFavoritesButtons() {
-        UI::SameLine();
-
         UI::BeginDisabled(FAVORITES.IsEmpty());
 
         if (UI::Button("Select...##SelectFavorites")) {
             playlist.AddFavorites(true);
         }
 
-        if (FAVORITES.IsEmpty()) UI::SetItemTooltip("You don't have any maps in your favorites\n\nIf you have added a map, reload the plugin.");
+        if (FAVORITES.IsEmpty()) UI::SetItemTooltip("You don't have any maps in your favorites\n\nIf you have added a map, reload them in the Dev settings.");
 
         UI::SameLine();
 
@@ -228,7 +229,31 @@ namespace UI {
             playlist.AddFavorites();
         }
 
-        if (FAVORITES.IsEmpty()) UI::SetItemTooltip("You don't have any maps in your favorites\n\nIf you have added a map, reload the plugin.");
+        if (FAVORITES.IsEmpty()) UI::SetItemTooltip("You don't have any maps in your favorites\n\nIf you have added a map, reload them in the Dev settings.");
+
+        UI::EndDisabled();
+    }
+
+    void RenderCurrentMapButtons() {
+        UI::BeginDisabled(!CurrentMap::CanBeAdded);
+
+        UI::BeginDisabled(savedPlaylists.IsEmpty());
+
+        if (UI::Button("Select playlists...##SelectPlaylists")) {
+            Renderables::Add(AddToPlaylist());
+        }
+
+        UI::EndDisabled();
+
+        if (savedPlaylists.IsEmpty()) {
+            UI::SetItemTooltip("You don't have any saved playlists!");
+        }
+
+        UI::SameLine();
+
+        if (UI::GreenButton("Add##AddCurrentMap")) {
+            startnew(CurrentMap::AddToCurrentPlaylist);
+        }
 
         UI::EndDisabled();
     }

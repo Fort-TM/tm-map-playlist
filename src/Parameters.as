@@ -82,6 +82,7 @@ enum Source {
     Club_Campaign,
     TOTD_Month,
     UID,
+    Current_Map,
     Favorites,
     File,
     Folder,
