@@ -32,7 +32,7 @@ const array<string> MAP_FIELDS_ARRAY = {
     "Tags"
 };
 
-const string MAP_FIELDS = string::Join(MAP_FIELDS_ARRAY, ",");
+const string MAP_FIELDS = Text::Join(MAP_FIELDS_ARRAY, ",");
 
 const array<string> MAPPACK_FIELDS_ARRAY = {
     "MappackId",
@@ -43,7 +43,7 @@ const array<string> MAPPACK_FIELDS_ARRAY = {
     "CreatedAt"
 };
 
-const string MAPPACK_FIELDS = string::Join(MAPPACK_FIELDS_ARRAY, ",");
+const string MAPPACK_FIELDS = Text::Join(MAPPACK_FIELDS_ARRAY, ",");
 
 enum GameMode {
     Race,

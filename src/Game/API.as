@@ -12,7 +12,7 @@ namespace TM {
         auto menu = app.MenuManager.MenuCustom_CurrentManiaApp;
         auto userId = menu.UserMgr.Users[0].Id;
         auto res = menu.DataFileMgr.Map_NadeoServices_GetFromUid(userId, mapUid);
-        
+
         WaitAndClearTaskLater(res, menu.DataFileMgr);
 
         if (!res.HasSucceeded || res.HasFailed) {
@@ -29,7 +29,7 @@ namespace TM {
 
     MwFastBuffer<CNadeoServicesMap@> GetMultipleMapsFromUids(array<string> uids) {
         _Logging::Trace("[GetMultipleMapsFromUids] Getting " + uids.Length + " maps from UID.");
-        _Logging::Debug("[GetMultipleMapsFromUids] UIDs: " + string::Join(uids, ", "));
+        _Logging::Debug("[GetMultipleMapsFromUids] UIDs: " + Text::Join(uids, ", "));
 
         MwFastBuffer<wstring> bufferUids;
 
@@ -41,7 +41,7 @@ namespace TM {
         auto menu = app.MenuManager.MenuCustom_CurrentManiaApp;
         auto userId = menu.UserMgr.Users[0].Id;
         auto res = menu.DataFileMgr.Map_NadeoServices_GetListFromUid(userId, bufferUids);
-        
+
         WaitAndClearTaskLater(res, menu.DataFileMgr);
 
         if (!res.HasSucceeded || res.HasFailed) {
@@ -84,7 +84,7 @@ namespace TM {
             _Logging::Error("[GetWeeklyShorts] Failed to get weekly shorts weeks from Nadeo Services");
             return;
         }
-		
+
 		if (json["campaignList"].Length == 0) {
             _Logging::Error("[GetWeeklyShorts] Weekly shorts endpoint returned 0 weeks.");
             return;
@@ -130,7 +130,7 @@ namespace TM {
             _Logging::Error("[GetWeeklyGrands] Failed to get weekly grands from Nadeo Services");
             return;
         }
-		
+
 		if (json["campaignList"].Length == 0) {
             _Logging::Error("[GetWeeklyGrands] Weekly grands endpoint returned 0 weeks.");
             return;
@@ -176,7 +176,7 @@ namespace TM {
             _Logging::Error("[GetSeasonalCampaigns] Failed to get seasonal campaigns from Nadeo Services.");
             return;
         }
-		
+
 		if (json["campaignList"].Length == 0) {
             _Logging::Error("[GetSeasonalCampaigns] Seasonal campaigns endpoint returned 0 campaigns.");
             return;
@@ -203,7 +203,7 @@ namespace TM {
         auto menu = app.MenuManager.MenuCustom_CurrentManiaApp;
         auto userId = menu.UserMgr.Users[0].Id;
         auto res = menu.DataFileMgr.Map_NadeoServices_GetFavoriteList(userId, MwFastBuffer<wstring>(), true, false, true, false);
-        
+
         WaitAndClearTaskLater(res, menu.DataFileMgr);
 
         if (!res.HasSucceeded || res.HasFailed) {
@@ -254,7 +254,7 @@ namespace TM {
             _Logging::Error("[GetTOTDMonths] Failed to get TOTD months from Nadeo Services");
             return;
         }
-		
+
 		if (json["monthList"].Length == 0) {
             _Logging::Error("[GetTOTDMonths] TOTD endpoint returned 0 months.");
             return;
@@ -264,7 +264,7 @@ namespace TM {
 
         for (uint i = 0; i < monthList.Length; i++) {
             Json::Value@ data = monthList[i];
-            
+
             if (data["days"].Length == 0) {
                 // Month doesn't have any maps
                 continue;
@@ -315,7 +315,7 @@ namespace TM {
             _Logging::Error("[GetClubCampaign] Failed to get club campaign: " + string(json[0]), true);
             return null;
         }
-		
+
 		if (resCode >= 400 || json.GetType() != Json::Type::Object || !json.HasKey("campaign")) {
             _Logging::Error("[GetClubCampaign] Failed to get club campaign from Nadeo Services");
             return null;
@@ -535,7 +535,7 @@ namespace TM {
         _Logging::Trace("[GetPbs] Getting PBs for " + ids.Length + " " + modeName + " maps.");
 
         for (uint c = 0; c < idChunks.Length; c++) {
-            string url = NadeoServices::BaseURLCore() + "/v2/accounts/" + userId + "/mapRecords?mapIdList=" + string::Join(idChunks[c], ",") + "&gameMode=" + modeName;
+            string url = NadeoServices::BaseURLCore() + "/v2/accounts/" + userId + "/mapRecords?mapIdList=" + Text::Join(idChunks[c], ",") + "&gameMode=" + modeName;
 
             _Logging::Debug("[GetPbs] Account PBs API request: " + url);
 
