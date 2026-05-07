@@ -13,7 +13,7 @@ class Map {
     Vistas Vista = Vistas::Stadium;
     string VistaName = "Stadium";
     int Index = -1;
-    bool HasClones;
+    bool HasClones = false;
 
     // Used in campaigns
     int Position = -1;

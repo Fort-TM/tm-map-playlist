@@ -5,7 +5,7 @@ class MapPlaylist {
     int CreatedAt;
     array<TMX::Tag@> Tags;
     MapColumns@ columnWidths = MapColumns();
-    bool Dirty; // For sorting
+    bool Dirty = false; // For sorting
 
     MapPlaylist() { }
 

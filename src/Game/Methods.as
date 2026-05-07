@@ -1,5 +1,5 @@
 namespace TM {
-    bool g_loadingMap;
+    bool g_loadingMap = false;
 
     const uint COOLDOWN = 2500;
 

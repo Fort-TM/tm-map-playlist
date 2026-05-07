@@ -1,5 +1,5 @@
 namespace UI {
-    bool g_focusMapList;
+    bool g_focusMapList = false;
 
     void RenderMainWindow() {
         if (!g_showMainWindow) {

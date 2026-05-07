@@ -1,6 +1,6 @@
 class SearchCampaigns: ModalDialog {
-    bool m_loading;
-    bool m_resetScroll;
+    bool m_loading = false;
+    bool m_resetScroll = false;
     string m_search;
     array<TM::ClubActivity@> m_results;
 
