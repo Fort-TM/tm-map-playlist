@@ -12,7 +12,9 @@ namespace Sort {
         SortTags,
         SortMedals,
         SortPb,
-        SortDelta
+        SortDelta,
+        SortSessionPb,
+        SortSessionDelta
     };
 
     // -1 means A is lower, 1 means A is higher, 0 means it's a tie
@@ -105,6 +107,28 @@ namespace Sort {
         if (a.GameMode == GameMode::Stunt) aDelta = aDelta * -1;
 
         int bDelta = b.GetMedalScore(S_MainMedal) - b.Pb;
+        if (b.GameMode == GameMode::Stunt) bDelta = bDelta * -1;
+
+        return Math::Clamp(aDelta - bDelta, -1, 1);
+    }
+
+    int SortSessionPb(Map@ a, Map@ b) {
+        if (!a.HasSessionPb && !b.HasSessionPb) return SortString(a.Name, b.Name);
+        if (!a.HasSessionPb) return -1;
+        if (!b.HasSessionPb) return 1;
+
+        return Math::Clamp(a.SessionPb - b.SessionPb, -1, 1);
+    }
+
+    int SortSessionDelta(Map@ a, Map@ b) {
+        if (!a.HasSessionPb && !b.HasSessionPb) return SortString(a.Name, b.Name);
+        if (!a.HasSessionPb) return -1;
+        if (!b.HasSessionPb) return 1;
+
+        int aDelta = a.GetMedalScore(S_MainMedal) - a.SessionPb;
+        if (a.GameMode == GameMode::Stunt) aDelta = aDelta * -1;
+
+        int bDelta = b.GetMedalScore(S_MainMedal) - b.SessionPb;
         if (b.GameMode == GameMode::Stunt) bDelta = bDelta * -1;
 
         return Math::Clamp(aDelta - bDelta, -1, 1);
