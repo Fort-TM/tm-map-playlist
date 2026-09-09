@@ -1,3 +1,7 @@
+[![Version](https://img.shields.io/badge/dynamic/json?color=lightgreen&label=Version&query=version&url=https%3A%2F%2Fopenplanet.dev%2Fapi%2Fplugin%2F727)](https://openplanet.dev/plugin/mapplaylist)
+[![Total Downloads](https://img.shields.io/badge/dynamic/json?color=pink&label=Downloads&query=downloads&url=https%3A%2F%2Fopenplanet.dev%2Fapi%2Fplugin%2F727)](https://openplanet.dev/plugin/mapplaylist)
+![Tags 1](https://img.shields.io/badge/dynamic/json?color=blue&label=Game&query=games%5B0%5D&url=https%3A%2F%2Fopenplanet.dev%2Fapi%2Fplugin%2F727)
+
 # Map Playlist
 
 Create a playlist of maps to play in solo. Switch to the next map on demand, when you obtain a specific medal, or after the timer is up.
